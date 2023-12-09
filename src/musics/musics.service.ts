@@ -78,7 +78,17 @@ export class MusicsService {
    * @param id is the type of number, which represent id of music
    * @returns UUID of rows deleted or affected
    */
-  remove(id: UUID): Promise<{ affected?: UUID }> {
-    throw new Error('Method not implemented.');
+  async remove(id: UUID): Promise<{ affected?: UUID }> {
+    try {
+      const result = await this.musicRepository.delete(id);
+      if (result.affected === 1) {
+        return { affected: id };
+      } else {
+        throw new Error(`Music with id ${id} not found`);
+      }
+    } catch (error) {
+      console.error('Error deleting music:', error.message, error.stack);
+      throw new Error('Error deleting music');
+    }
   }
 }

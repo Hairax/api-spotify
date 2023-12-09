@@ -89,19 +89,3 @@ CREATE TABLE IF NOT EXISTS spotify.playlist (
 CREATE INDEX IF NOT EXISTS music_name_idx ON spotify.music USING btree (name);
 CREATE INDEX IF NOT EXISTS user_name_idx ON spotify.user USING btree (user_name);
 CREATE INDEX IF NOT EXISTS playlist_name_idx ON spotify.playlist USING btree (name);
-
-INSERT INTO spotify.music
-(id, music_genre, "name", authors, "year", is_active, created_date)
-VALUES(uuid_generate_v4(), 1, 'Easy on me', 'Adele', 2021, true, CURRENT_TIMESTAMP(3));
-
-INSERT INTO spotify.music
-(id, music_genre, "name", authors, "year", is_active, created_date)
-VALUES(uuid_generate_v4(), 2, 'La mordidita', 'Ricky Martin', 2015, true, CURRENT_TIMESTAMP(3));
-
-INSERT INTO spotify.music
-(id, music_genre, "name", authors, "year", is_active, created_date)
-VALUES(uuid_generate_v4(), 5, 'I will survive', 'Gloria Gaynor', 1978, false, CURRENT_TIMESTAMP(3));
-
-INSERT INTO spotify.music
-(id, music_genre, "name", authors, "year", is_active, created_date)
-VALUES(uuid_generate_v4(), 1, 'Harry Styles', 'As it was', 2022, true, CURRENT_TIMESTAMP(3));
