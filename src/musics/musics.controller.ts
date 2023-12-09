@@ -33,7 +33,7 @@ export class MusicsController {
 
   @Patch(':id')
   update(@Param('id') id: UUID, @Body() updateMusicDto: UpdateMusicDto) {
-    return this.musicService.update(+id, updateMusicDto);
+    return this.musicService.update(id, updateMusicDto);
   }
 
   @Delete(':id')

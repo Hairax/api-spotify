@@ -5,6 +5,7 @@ import { MusicEntity } from './entities/music.entity';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UUID } from 'crypto';
 import { UpdateMusicDto } from './dto/update-music.dto';
+import { FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class MusicsService {
@@ -51,8 +52,8 @@ export class MusicsService {
    * Gets one specific music based on id
    * @returns promise of array of musics
    */
-  findOne(id: UUID) {
-    throw new Error('Method not implemented.');
+  async findOne(id: UUID): Promise<MusicEntity | undefined> {
+    return this.musicRepository.findOne({ where: { id } });
   }
 
   /**
@@ -62,16 +63,29 @@ export class MusicsService {
    * @param updateMusicDto this is partial type of createMusicDto.
    * @returns promise of udpate music
    */
-  update(id: number, updateMusicDto: UpdateMusicDto): Promise<MusicEntity> {
-    throw new Error('Method not implemented.');
-    // const music: Music = new Music();
-    // music.name = updateMusicDto.name;
-    // music.music_genre = updateMusicDto.music_genre;
-    // music.authors = updateMusicDto.authors;
-    // music.year = updateMusicDto.year;
-
-    // return this.musicRepository.save(music);
+  async update(id: UUID, updateMusicDto: UpdateMusicDto): Promise<MusicEntity> {
+    try {
+      const existingMusic = await this.musicRepository.findOne({ where: { id } } as FindOneOptions<MusicEntity>);
+  
+      if (!existingMusic) {
+        throw new Error(`Music with id ${id} not found`);
+      }
+  
+      existingMusic.music_genre = updateMusicDto.music_genre;
+      existingMusic.name = updateMusicDto.name;
+      existingMusic.authors = updateMusicDto.authors;
+      existingMusic.year = updateMusicDto.year;
+  
+      // Validar DTO
+      updateMusicDto.validate();
+  
+      return this.musicRepository.save(existingMusic);
+    } catch (error) {
+      console.error('Error updating music:', error.message, error.stack);
+      throw new Error('Error updating music');
+    }
   }
+  
 
   /**
    * Removes or deletes music from database.
