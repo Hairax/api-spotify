@@ -65,27 +65,23 @@ export class MusicsService {
    */
   async update(id: UUID, updateMusicDto: UpdateMusicDto): Promise<MusicEntity> {
     try {
-      const existingMusic = await this.musicRepository.findOne({ where: { id } } as FindOneOptions<MusicEntity>);
-  
+      const existingMusic = await this.musicRepository.findOne({
+        where: { id },
+      } as FindOneOptions<MusicEntity>);
       if (!existingMusic) {
         throw new Error(`Music with id ${id} not found`);
       }
-  
       existingMusic.music_genre = updateMusicDto.music_genre;
       existingMusic.name = updateMusicDto.name;
       existingMusic.authors = updateMusicDto.authors;
       existingMusic.year = updateMusicDto.year;
-  
-      // Validar DTO
       updateMusicDto.validate();
-  
       return this.musicRepository.save(existingMusic);
     } catch (error) {
       console.error('Error updating music:', error.message, error.stack);
       throw new Error('Error updating music');
     }
   }
-  
 
   /**
    * Removes or deletes music from database.

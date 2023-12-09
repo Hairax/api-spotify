@@ -5,6 +5,7 @@ import { ItemsModule } from './items/items.module';
 import { MusicsModule } from './musics/musics.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MusicEntity } from './musics/entities/music.entity';
+import { PlaylistsModule } from './playlists/playlists.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MusicEntity } from './musics/entities/music.entity';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    PlaylistsModule,
     MusicsModule,
   ],
   controllers: [AppController],
