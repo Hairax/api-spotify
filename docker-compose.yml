@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-spotify
+    environment:
+      POSTGRES_DB: spotify_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5050:5050
+    command: -p 5050
+    volumes:
+      - postgres-data-ex:/var/lib/postgresql/data
+      - ./database/initialize.sql:/docker-entrypoint-initdb.d/initialize.sql
+      - ./database/test_data/insert_queries.sql:/docker-entrypoint-initdb.d/test_data/insert_queries.sql
+
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestjs-app
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://root:root@postgres:5050/spotify_db
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/app
+
+volumes:
+  postgres-data-ex:
+
