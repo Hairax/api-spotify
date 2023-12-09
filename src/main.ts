@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger, BadRequestException } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const PREFIX = '/api';
@@ -10,14 +10,20 @@ const DESCRIPTION = 'REST Api Sample REF';
 const VERSION = '1.0';
 const PORT = process.env.PORT ?? 3000;
 
-async function main() {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      exceptionFactory: (errors) => {
+        const logger = new Logger('ValidationPipe');
+        logger.error(errors);
+        return new BadRequestException('Validation failed');
+      },
     }),
   );
+
   app.setGlobalPrefix('/api');
   app.enableCors();
 
@@ -33,7 +39,4 @@ async function main() {
 
   await app.listen(PORT);
 }
-
-main().catch((err: Error) => {
-  throw new Error(err.message);
-});
+bootstrap();

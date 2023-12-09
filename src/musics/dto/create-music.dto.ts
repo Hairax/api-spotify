@@ -1,29 +1,36 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsAlphanumeric,
   IsEnum,
   IsInt,
   IsNotEmpty,
   IsString,
   MinLength,
+  IsAlphanumeric,
 } from 'class-validator';
 
 export class CreateMusicDto {
   @IsInt()
   @IsEnum([1, 2, 3, 4, 5, 6])
-  music_gener: number;
+  music_genre: number;
 
   @IsString()
   @MinLength(5, { message: 'Name must have at least 5 characters.' })
   @IsNotEmpty()
   name: string;
 
-  @IsNotEmpty()
+  //@IsAlphanumeric()
+  @IsString()
   @MinLength(5, { message: 'Authors must have at least 5 characters.' })
-  @IsAlphanumeric(null, {
-    message: 'Authors does not allow other than alpha numeric chars.',
-  })
+  @IsNotEmpty()
   authors: string;
+
+  validate() {
+    if (!/^[a-zA-Z0-9 ]+$/.test(this.authors)) {
+      throw new Error(
+        'Authors must only contain letters, numbers, and spaces.',
+      );
+    }
+  }
 
   @IsInt()
   year: number;

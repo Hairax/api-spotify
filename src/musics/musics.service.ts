@@ -24,14 +24,17 @@ export class MusicsService {
    * @returns promise of music
    */
   create(createMusicDto: CreateMusicDto): Promise<MusicEntity> {
-    const music: MusicEntity = new MusicEntity();
-
-    music.name = createMusicDto.name;
-    music.music_genre = createMusicDto.music_gener;
-    music.authors = createMusicDto.authors;
-    music.year = createMusicDto.year;
-
-    return this.musicRepository.save(music);
+    try {
+      const music: MusicEntity = new MusicEntity();
+      music.name = createMusicDto.name;
+      music.music_genre = createMusicDto.music_genre;
+      music.authors = createMusicDto.authors;
+      music.year = createMusicDto.year;
+      return this.musicRepository.save(music);
+    } catch (error) {
+      console.error('Error creating music:', error.message, error.stack);
+      throw new Error('Error creating music');
+    }
   }
 
   /**
